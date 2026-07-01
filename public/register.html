@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      .auth-card {
+        max-width: 450px;
+        margin: 80px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card auth-card">
+      <h1>Create Account</h1>
+
+      <form id="registerForm">
+        <input type="text" id="name" placeholder="Full Name" required />
+
+        <input type="email" id="email" placeholder="Email" required />
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter Password"
+            required
+          />
+
+          <span id="togglePassword" class="toggle-password">👁</span>
+        </div>
+
+        <button type="submit" id="registerBtn">Register</button>
+      </form>
+
+      <p style="text-align: center; margin-top: 20px">
+        Already have an account?
+
+        <a href="login.html"> Login </a>
+      </p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="auth.js"></script>
+    
+  </body>
+</html>

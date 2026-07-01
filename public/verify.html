@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Email Verification</h1>
+
+      <form id="verifyForm">
+        <input type="email" id="email" placeholder="Enter Email" required />
+
+        <div class="otp-boxes">
+          <input class="otp-input" maxlength="1" />
+          <input class="otp-input" maxlength="1" />
+          <input class="otp-input" maxlength="1" />
+          <input class="otp-input" maxlength="1" />
+          <input class="otp-input" maxlength="1" />
+          <input class="otp-input" maxlength="1" />
+        </div>
+
+        <button type="submit">Verify OTP</button>
+        <button type="button" id="resendOtp">Resend OTP</button>
+        <p id="timer">Resend available in 60s</p>
+      </form>
+
+      <p style="text-align: center; margin-top: 20px">
+        <a href="login.html"> Back to Login </a>
+      </p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="verify.js"></script>
+    <script src="auth.js"></script>
+
+  </body>
+</html>
