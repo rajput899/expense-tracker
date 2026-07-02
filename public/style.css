@@ -319,3 +319,24 @@ button:disabled {
   user-select: none;
   font-size: 18px;
 }
+.footer {
+  margin-top: 50px;
+  padding: 20px;
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer strong {
+  color: #4facfe;
+}
+
+.light-mode .footer {
+  color: #475569;
+  border-top: 1px solid #cbd5e1;
+}
+
+.light-mode .footer strong {
+  color: #2563eb;
+}
