@@ -1,6 +1,6 @@
 require("dotenv").config();
+const axios = require("axios");
 
-const nodemailer = require("nodemailer");
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
@@ -22,23 +22,7 @@ mongoose
   .catch((error) => {
     console.log("Database Error:", error.message);
   });
-//Transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS,
-  },
-});
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("SMTP Error:", error);
-  } else {
-    console.log("Brevo Connected");
-  }
-});
+
 //Middleware
 function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -63,7 +47,47 @@ if (!authHeader || !authHeader.startsWith("Bearer ")) {
     });
   }
 }
+// Send OTP Email
+async function sendOTP(email, otp) {
+  try {
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      {
+        sender: {
+          name: "Expense Tracker",
+          email: process.env.SENDER_EMAIL,
+        },
+        to: [
+          {
+            email: email,
+          },
+        ],
+        subject: "Expense Tracker - Email Verification OTP",
+        htmlContent: `
+          <h2>Email Verification</h2>
+          <p>Your OTP is:</p>
+          <h1>${otp}</h1>
+          <p>This OTP will expire in 10 minutes.</p>
+        `,
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "api-key": process.env.BREVO_API_KEY,
+          "content-type": "application/json",
+        },
+      }
+    );
 
+    console.log("Brevo Success:", response.data);
+  } catch (error) {
+    console.error("Brevo Status:", error.response?.status);
+    console.error("Brevo Data:", error.response?.data);
+    console.error("Brevo Message:", error.message);
+
+    throw error;
+  }
+}
 // Register User
 app.post("/register", async (req, res) => {
   try {
@@ -98,19 +122,7 @@ app.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    // Send OTP Email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Expense Tracker - Email Verification OTP",
-      html: `
-        <h2>Email Verification</h2>
-        <p>Your OTP is:</p>
-        <h1>${otp}</h1>
-        <p>This OTP will expire in 10 minutes.</p>
-      `,
-    });
-
+    await sendOTP(email, otp);
     res.status(201).json({
       message: "OTP sent to your email",
     });
@@ -262,17 +274,7 @@ app.post("/resend-otp", async (req, res) => {
     user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
     await user.save();
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Expense Tracker - New OTP",
-      html: `
-        <h2>Your New OTP</h2>
-        <h1>${otp}</h1>
-        <p>This OTP expires in 10 minutes.</p>
-      `,
-    });
+    await sendOTP(email, otp);
 
     res.json({
       message: "New OTP sent successfully",
@@ -283,7 +285,7 @@ app.post("/resend-otp", async (req, res) => {
     });
   }
 });
-//Forget Paaword
+//Forget Password
 app.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -303,17 +305,7 @@ app.post("/forgot-password", async (req, res) => {
 
     await user.save();
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Password Reset OTP",
-      html: `
-        <h2>Expense Tracker</h2>
-        <p>Your Password Reset OTP is:</p>
-        <h1>${otp}</h1>
-        <p>This OTP is valid for 10 minutes.</p>
-      `,
-    });
+    await sendOTP(email, otp);
 
     res.json({
       message: "OTP sent successfully",
