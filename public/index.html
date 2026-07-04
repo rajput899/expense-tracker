@@ -7,54 +7,55 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
-      <h1>Expense Tracker</h1>
-      <div class="navbar">
-        <div class="nav-left">
-          <button id="profileBtn">👤 Profile</button>
-        </div>
+ <div class="top-bar">
+  <h1>Expense Tracker</h1>
 
-        <div class="nav-right">
-          <button id="themeBtn">🌙 Theme</button>
-          <button id="exportBtn">📥 CSV</button>
-          <button id="pdfBtn">📄 PDF</button>
-          <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
-        </div>
-      </div>
+  <div class="nav-actions">
+    <button id="profileBtn" class="profile-btn">👤 Profile</button>
+
+    <button id="themeBtn" class="theme-btn">🌙 Theme</button>
+
+    <button id="exportBtn" class="csv-btn">📥 CSV</button>
+
+    <button id="pdfBtn" class="pdf-btn">📄 PDF</button>
+
+    <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+  </div>
+</div>
 
       <div class="stats">
         <div class="card stat-card">
-          <h3>Total Expense</h3>
+         <h3>💰 Total Expense</h3>
           <h2 id="total">₹0</h2>
         </div>
 
         <div class="card stat-card">
-          <h3>Total Transactions</h3>
+          <h3>🧾 Total Transactions</h3>
           <h2 id="count">0</h2>
           <p id="warning"></p>
         </div>
 
         <div class="card stat-card">
-          <h3>Highest Expense</h3>
+          <h3>📈 Highest Expense</h3>
           <h2 id="highest">₹0</h2>
         </div>
         <div class="card stat-card">
-          <h3>Today's Expense</h3>
+          <h3>📅 Today's Expense</h3>
           <h2 id="todayExpense">₹0</h2>
         </div>
 
         <div class="card stat-card">
-          <h3>This Month</h3>
+          <h3>📆 This Month</h3>
           <h2 id="monthExpense">₹0</h2>
         </div>
 
         <div class="card stat-card">
-          <h3>Average Expense</h3>
+          <h3>📊 Average Expense</h3>
           <h2 id="averageExpense">₹0</h2>
         </div>
 
         <div class="card stat-card">
-          <h3>Top Category</h3>
+          <h3>🔝 Top Category</h3>
           <h2 id="topCategory">-</h2>
         </div>
       </div>
