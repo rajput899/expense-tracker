@@ -222,6 +222,8 @@ async function loadExpenses() {
   console.log("Total:", total);
   totalElement.innerText = `₹${total}`;
   const remaining = budget - total;
+  document.getElementById("remainingCard").textContent =
+    "₹" + remaining;
   const warningKey = `budget-warning-${budget}`;
   if (total >= budget) {
     remainingBudget.innerText = `Over by ₹${Math.abs(remaining)}`;
