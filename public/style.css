@@ -327,6 +327,9 @@ button:disabled {
 .password-wrapper {
   position: relative;
 }
+.password-wrapper input {
+  padding-right: 45px;
+}
 
 .toggle-password {
   position: absolute;

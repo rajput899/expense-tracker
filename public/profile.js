@@ -9,6 +9,20 @@ function showToast(icon, title) {
   });
 }
 
+document.querySelectorAll(".toggle-password").forEach((eyeIcon) => {
+  eyeIcon.addEventListener("click", () => {
+    const input = document.getElementById(eyeIcon.dataset.target);
+
+    if (input.type === "password") {
+      input.type = "text";
+      eyeIcon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      eyeIcon.textContent = "👁";
+    }
+  });
+});
+
 const token = localStorage.getItem("token");
 
 if (!token) {
