@@ -340,3 +340,141 @@ button:disabled {
 .light-mode .footer strong {
   color: #2563eb;
 }
+/* =========================
+   Responsive Improvements
+========================= */
+
+img,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  transition: 0.25s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+input,
+select,
+button {
+  font-size: 16px;
+}
+
+/* Action Buttons */
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.action-buttons button {
+  flex: 1;
+}
+
+/* Logout */
+
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+#logoutBtn {
+  width: auto;
+  padding: 12px 20px;
+  background: #ef4444;
+}
+
+#logoutBtn:hover {
+  background: #dc2626;
+}
+
+/* Better Card */
+
+.card {
+  overflow: hidden;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+  .container {
+    width: 95%;
+    padding: 20px 12px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .chart-buttons,
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  #logoutBtn {
+    width: 100%;
+  }
+
+  .expense h2 {
+    font-size: 20px;
+  }
+
+  .expense h3 {
+    font-size: 18px;
+  }
+
+  .otp-boxes {
+    gap: 6px;
+  }
+
+  .otp-input {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  canvas {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  input,
+  select,
+  button {
+    padding: 13px;
+  }
+
+  .expense {
+    padding: 15px;
+  }
+
+  #total {
+    font-size: 28px;
+  }
+
+  .stat-card h2 {
+    font-size: 28px;
+  }
+}
