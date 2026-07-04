@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forgot Password</title>
 
     <link rel="stylesheet" href="style.css" />
@@ -16,39 +17,40 @@
 
         <button type="submit" id="sendOtpBtn">Send OTP</button>
       </form>
-    </div>
-    <div id="resetSection" style="display: none">
-      <input
-        type="text"
-        id="otp"
-        placeholder="Enter OTP"
-        maxlength="6"
-        required
-      />
 
-      <div class="password-wrapper">
+      <div id="resetSection" style="display: none">
         <input
-          type="password"
-          id="newPassword"
-          placeholder="New Password"
+          type="text"
+          id="otp"
+          placeholder="Enter OTP"
+          maxlength="6"
           required
         />
 
-        <span id="toggleNewPassword" class="toggle-password">👁</span>
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="newPassword"
+            placeholder="New Password"
+            required
+          />
+
+          <span id="toggleNewPassword" class="toggle-password">👁</span>
+        </div>
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            required
+          />
+
+          <span id="toggleConfirmPassword" class="toggle-password">👁</span>
+        </div>
+
+        <button id="resetBtn" type="button">Reset Password</button>
       </div>
-
-      <div class="password-wrapper">
-        <input
-          type="password"
-          id="confirmPassword"
-          placeholder="Confirm Password"
-          required
-        />
-
-        <span id="toggleConfirmPassword" class="toggle-password">👁</span>
-      </div>
-
-      <button id="resetBtn" type="button">Reset Password</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="forgot.js"></script>
