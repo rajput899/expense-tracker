@@ -88,6 +88,8 @@ expense-tracker/
 │   ├── script.js
 │   ├── auth.js
 │   ├── style.css
+|   ├── profile.html
+|   ├── profilr.js
 │
 ├── server.js
 ├── package.json
@@ -166,7 +168,7 @@ Dashboard
 # 📈 Dashboard
 
 The dashboard includes
-
+- Profile
 - Total Expense
 - Total Transactions
 - Highest Expense
@@ -181,7 +183,7 @@ The dashboard includes
 
 # 📤 Export
 
-Users can export all expenses into a CSV file for record keeping.
+Users can export all expenses into a CSV file or PDF file for record keeping.
 
 ---
 
@@ -199,16 +201,6 @@ OTP emails are delivered using the **Brevo Email API**.
 - Email Verification
 - OTP Expiration
 - Secure Password Reset
-
----
-
-# 📌 Upcoming Features
-
-- 👤 User Profile Page
-- 📱 Better Mobile Responsiveness
-- 📊 Advanced Dashboard Analytics
-- 📄 PDF Export
-
 
 ---
 
