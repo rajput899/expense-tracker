@@ -19,7 +19,32 @@ function showToast(icon, title) {
     color: "#fff",
   });
 }
- let allExpenses = [];
+
+let allExpenses = [];
+const pdfBtn = document.getElementById("pdfBtn");
+let profile = {};
+const todayElement = document.getElementById("todayExpense");
+
+const monthElement = document.getElementById("monthExpense");
+
+const averageElement = document.getElementById("averageExpense");
+
+const topCategoryElement = document.getElementById("topCategory");
+async function loadProfileData() {
+  try {
+    const response = await fetch("/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) return;
+
+    profile = await response.json();
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const token = localStorage.getItem("token");
 
@@ -47,6 +72,13 @@ themeBtn.addEventListener("click", () => {
     themeBtn.innerText = "🌙 Dark Mode";
   }
 });
+const profileBtn = document.getElementById("profileBtn");
+
+if (profileBtn) {
+  profileBtn.addEventListener("click", () => {
+    window.location.href = "/profile.html";
+  });
+}
 const pieBtn = document.getElementById("pieBtn");
 const barBtn = document.getElementById("barBtn");
 
@@ -88,7 +120,7 @@ async function loadBudget() {
     budget = data.budget || 0;
 
     budgetInput.value = budget;
-  } catch(err) {
+  } catch (err) {
     showToast("error", err.message);
   }
 }
@@ -99,9 +131,9 @@ async function loadExpenses() {
       Authorization: `Bearer ${token}`,
     },
   });
-allExpenses = await response.json();
+  allExpenses = await response.json();
 
-let expenses = [...allExpenses];
+  let expenses = [...allExpenses];
   // Search
   const searchValue = searchInput.value.toLowerCase();
 
@@ -110,21 +142,38 @@ let expenses = [...allExpenses];
   );
 
   // Category Filter
- if (filter && filter.value !== "All") {
-  expenses = expenses.filter(
-    (expense) => expense.category === filter.value
-  );
-}
+  if (filter && filter.value !== "All") {
+    expenses = expenses.filter((expense) => expense.category === filter.value);
+  }
 
   expenseList.innerHTML = "";
 
   let total = 0;
+
   let highest = 0;
+
+  let todayTotal = 0;
+
+  let monthTotal = 0;
 
   const categories = {};
 
+  const today = new Date();
+
   expenses.forEach((expense) => {
     total += Number(expense.amount);
+    const expenseDate = new Date(expense.date);
+
+    if (expenseDate.toDateString() === today.toDateString()) {
+      todayTotal += Number(expense.amount);
+    }
+
+    if (
+      expenseDate.getMonth() === today.getMonth() &&
+      expenseDate.getFullYear() === today.getFullYear()
+    ) {
+      monthTotal += Number(expense.amount);
+    }
 
     if (expense.amount > highest) {
       highest = expense.amount;
@@ -227,6 +276,27 @@ let expenses = [...allExpenses];
   }
 
   countElement.innerText = expenses.length;
+  todayElement.innerText = `₹${todayTotal}`;
+
+  monthElement.innerText = `₹${monthTotal}`;
+
+  averageElement.innerText = expenses.length
+    ? `₹${Math.round(total / expenses.length)}`
+    : "₹0";
+
+  let topCategory = "-";
+
+  let max = 0;
+
+  for (const category in categories) {
+    if (categories[category] > max) {
+      max = categories[category];
+
+      topCategory = category;
+    }
+  }
+
+  topCategoryElement.innerText = topCategory;
   highestElement.innerText = `₹${highest}`;
 
   if (expenses.length === 0) {
@@ -353,7 +423,7 @@ async function deleteExpense(id) {
     });
 
     if (!response.ok) {
-   throw new Error("Failed to delete expense");
+      throw new Error("Failed to delete expense");
     }
     showToast("success", "Expense deleted");
 
@@ -435,16 +505,11 @@ exportBtn.addEventListener("click", () => {
     return;
   }
 
-  if (allExpenses.length === 0) {
-  showToast("info", "No expenses to export");
-  return;
-}
+  let csv = "Title,Amount,Category,Date\n";
 
-let csv = "Title,Amount,Category,Date\n";
-
-allExpenses.forEach((expense) => {
-  csv += `${expense.title},${expense.amount},${expense.category},${new Date(expense.date).toLocaleDateString()}\n`;
-});
+  allExpenses.forEach((expense) => {
+    csv += `${expense.title},${expense.amount},${expense.category},${new Date(expense.date).toLocaleDateString()}\n`;
+  });
 
   const blob = new Blob([csv], { type: "text/csv" });
 
@@ -460,6 +525,7 @@ allExpenses.forEach((expense) => {
 });
 
 async function init() {
+  await loadProfileData();
   await loadBudget();
   await loadExpenses();
 }
@@ -467,12 +533,148 @@ async function init() {
 init();
 const logoutBtn = document.getElementById("logoutBtn");
 
-logoutBtn.addEventListener("click", () => {
+logoutBtn.addEventListener("click", async () => {
+  const result = await Swal.fire({
+    title: "Logout?",
+
+    text: "Do you really want to logout?",
+
+    icon: "question",
+
+    showCancelButton: true,
+
+    confirmButtonText: "Logout",
+
+    cancelButtonText: "Cancel",
+  });
+
+  if (!result.isConfirmed) return;
+
   localStorage.removeItem("token");
   localStorage.removeItem("user");
+
   budget = 0;
   editId = null;
   allExpenses = [];
 
   window.location.href = "/login.html";
 });
+if (pdfBtn) {
+  pdfBtn.addEventListener("click", generatePDF);
+}
+
+async function generatePDF() {
+  if (!allExpenses.length) {
+    return showToast("warning", "No expenses to export");
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF();
+
+  // Header
+  doc.setFillColor(37, 99, 235);
+  doc.rect(0, 0, 210, 28, "F");
+
+  doc.setTextColor(255);
+  doc.setFontSize(22);
+  doc.text("Expense Tracker Report", 14, 18);
+
+  doc.setTextColor(0);
+
+  let y = 40;
+
+  doc.setFontSize(12);
+
+  doc.text(`Name : ${profile.name || "-"}`, 14, y);
+
+  y += 8;
+
+  doc.text(`Email : ${profile.email || "-"}`, 14, y);
+
+  y += 8;
+
+  doc.text(`Generated : ${new Date().toLocaleString()}`, 14, y);
+
+  y += 12;
+
+  doc.setFontSize(14);
+
+  doc.text("Summary", 14, y);
+
+  y += 8;
+
+  doc.setFontSize(11);
+
+  doc.text(
+    `Total Expense : ₹${totalElement.innerText.replace("₹", "")}`,
+    14,
+    y,
+  );
+
+  y += 7;
+
+  doc.text(`Transactions : ${countElement.innerText}`, 14, y);
+
+  y += 7;
+
+  doc.text(`Highest Expense : ${highestElement.innerText}`, 14, y);
+
+  y += 7;
+
+  doc.text(`Budget : ₹${budget}`, 14, y);
+
+  y += 7;
+
+  doc.text(`Remaining : ${remainingBudget.innerText}`, 14, y);
+
+  y += 12;
+
+  const rows = [];
+
+  allExpenses.forEach((expense) => {
+    rows.push([
+      expense.title,
+
+      expense.category,
+
+      `₹${expense.amount}`,
+
+      new Date(expense.date).toLocaleDateString(),
+    ]);
+  });
+
+  doc.autoTable({
+    head: [["Title", "Category", "Amount", "Date"]],
+
+    body: rows,
+
+    startY: y,
+
+    theme: "striped",
+
+    headStyles: {
+      fillColor: [37, 99, 235],
+    },
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+
+    doc.setFontSize(10);
+
+    doc.text(
+      `Generated by Expense Tracker | Page ${i}/${pageCount}`,
+
+      14,
+
+      290,
+    );
+  }
+
+  doc.save("Expense_Report.pdf");
+
+  showToast("success", "PDF Downloaded");
+}

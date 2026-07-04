@@ -380,8 +380,54 @@ button {
 
 .top-actions {
   display: flex;
+  gap: 12px;
   justify-content: flex-end;
-  margin-bottom: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.top-actions button {
+  width: auto;
+
+  padding: 12px 18px;
+
+  font-size: 15px;
+
+  margin: 0;
+}
+
+#profileBtn {
+  background: #10b981;
+}
+
+#profileBtn:hover {
+  background: #059669;
+}
+
+#pdfBtn {
+  background: #8b5cf6;
+}
+
+#pdfBtn:hover {
+  background: #7c3aed;
+}
+
+#logoutBtn {
+  background: #ef4444;
+}
+
+#logoutBtn:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .top-actions {
+    flex-direction: column;
+  }
+
+  .top-actions button {
+    width: 100%;
+  }
 }
 
 #logoutBtn {
@@ -403,7 +449,6 @@ button {
 /* Mobile */
 
 @media (max-width: 768px) {
-
   .container {
     width: 95%;
     padding: 20px 12px;
@@ -451,7 +496,6 @@ button {
 }
 
 @media (max-width: 480px) {
-
   h1 {
     font-size: 26px;
   }
